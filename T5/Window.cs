@@ -4,13 +4,14 @@ using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace T5
 {
     public class Window : GameWindow
     {
         private const float FIELD_OF_VIEW = 60f * (float)Math.PI / 180f;
-        private const float CUBE_SIZE = 1;
 
         private const float Z_NEAR = 0.1f;
         private const float Z_FAR = 10f;
@@ -18,111 +19,36 @@ namespace T5
         private bool _leftMouseBtnPressed = false;
 
         private Matrix4 _cameraMatrix = Matrix4.LookAt(
-            new(0, 0, 6),
+            new(0, 0, 5),
             new(0, 0, 0),
             new(0, 2, 0));
 
-        private static float[,] verticesGarageFront = new float[3, 3]
+        private static float[,] verticesGround = new float[8, 3]
         {
-            { -0.9f, +1, +1 }, // 0
-			{ +0.9f, +1, +1 }, // 1
-			{ 0, +2, +1 },  // 2
+            { -4, -1.1f, -5 }, // 0
+			{ +4, -1.1f, -5 }, // 1
+			{ +4, -1, -5 }, // 2
+			{ -4, -1, -5 },	// 3
+			{ -4, -1.1f, +5 },	// 4
+			{ +4, -1.1f, +5 },	// 5
+			{ +4, -1, +5 },	// 6
+			{ -4, -1, +5 } 	// 7
 		};
 
-        private static float[,] verticesGarageBack = new float[3, 3]
-        {
-            { -0.9f, +1, -3 }, // 0
-			{ +0.9f, +1, -3 }, // 1
-			{ 0, +2, -3 },  // 2
-		};
+        private Garage _Garage;
 
-        private static float[,] verticesGarage = new float[8, 3]
-        {
-            { -1, -1, -3 }, // 0
-			{ +1, -1, -3 }, // 1
-			{ +1, +1, -3 }, // 2
-			{ -1, +1, -3 },	// 3
-			{ -1, -1, +1 },	// 4
-			{ +1, -1, +1 },	// 5
-			{ +1, +1, +1 },	// 6
-			{ -1, +1, +1 } 	// 7
-		};
+        private House _HouseMain;
 
-        private static float[,] verticesGarageRight = new float[8, 3]
-        {
-            { +1.2f,  0.6f, -3 },   // 0
-			{ +1.4f,  0.6f, -3 },   // 1
-			{ 0.2f,   +2,   -3 },   // 2
-			{ 0f,     +2,   -3 },	// 3
-			{ +1.2f,  0.6f, +1 },	// 4
-			{ +1.4f,  0.6f, +1 },	// 5
-			{ 0.2f,   +2,   +1 },	// 6
-			{ 0f,     +2,   +1 } 	// 7
-             
-
-		};
-
-        private static float[,] verticesGarageLeft = new float[8, 3]
-        {
-            { -1.4f, 0.6f, -3 }, // 0
-			{ -1.2f, 0.6f, -3 }, // 1
-            { +0,    +2,   -3 }, // 2
-			{ -0.2f, +2,   -3 }, // 3			
-            { -1.4f, 0.6f, +1 }, // 4
-			{ -1.2f, 0.6f, +1 }, // 5			
-            { +0,    +2,   +1 }, // 6
-			{ -0.2f, +2,   +1 }  // 7
-
-        };
-
-        private Triangle _garageFront = new Triangle(verticesGarageFront);
-        private Triangle _garageBack = new Triangle(verticesGarageBack);
-
-        private Cube _garageMain = new Cube(verticesGarage);
-
-        private Cube _garageRoofRight = new Cube(verticesGarageRight);
-        private Cube _garageRoofLeft = new Cube(verticesGarageLeft);
-
+        private Cube _Ground;
+        
 
         public Window(NativeWindowSettings cfg)
             : base(GameWindowSettings.Default, cfg)
         {
-            _garageFront.SetSideColor(CubeSide.NEGATIVE_X, new(1, 0, 0, 1));
-            _garageFront.SetSideColor(CubeSide.POSITIVE_X, new(0, 1, 0, 1));
-            _garageFront.SetSideColor(CubeSide.NEGATIVE_Y, new(0, 0, 1, 1));
-            _garageFront.SetSideColor(CubeSide.POSITIVE_Y, new(1, 1, 0, 1));
-            _garageFront.SetSideColor(CubeSide.NEGATIVE_Z, new(0, 1, 1, 1));
-            _garageFront.SetSideColor(CubeSide.POSITIVE_Z, new(1, 0, 1, 1));
-
-            _garageBack.SetSideColor(CubeSide.NEGATIVE_X, new(1, 0, 0, 1));
-            _garageBack.SetSideColor(CubeSide.POSITIVE_X, new(0, 1, 0, 1));
-            _garageBack.SetSideColor(CubeSide.NEGATIVE_Y, new(0, 0, 1, 1));
-            _garageBack.SetSideColor(CubeSide.POSITIVE_Y, new(1, 1, 0, 1));
-            _garageBack.SetSideColor(CubeSide.NEGATIVE_Z, new(0, 1, 1, 1));
-            _garageBack.SetSideColor(CubeSide.POSITIVE_Z, new(1, 0, 1, 1));
-
-            _garageMain.SetSideColor(CubeSide.NEGATIVE_X, new(1, 0, 0, 1));
-            _garageMain.SetSideColor(CubeSide.POSITIVE_X, new(0, 1, 0, 1));
-            _garageMain.SetSideColor(CubeSide.NEGATIVE_Y, new(0, 0, 1, 1));
-            _garageMain.SetSideColor(CubeSide.POSITIVE_Y, new(1, 1, 0, 1));
-            _garageMain.SetSideColor(CubeSide.NEGATIVE_Z, new(0, 1, 1, 1));
-            _garageMain.SetSideColor(CubeSide.POSITIVE_Z, new(1, 0, 1, 1));
-
-            _garageRoofRight.SetSideColor(CubeSide.NEGATIVE_X, new(1, 0, 0, 1));
-            _garageRoofRight.SetSideColor(CubeSide.POSITIVE_X, new(0, 1, 0, 1));
-            _garageRoofRight.SetSideColor(CubeSide.NEGATIVE_Y, new(0, 0, 1, 1));
-            _garageRoofRight.SetSideColor(CubeSide.POSITIVE_Y, new(1, 1, 0, 1));
-            _garageRoofRight.SetSideColor(CubeSide.NEGATIVE_Z, new(0, 1, 1, 1));
-            _garageRoofRight.SetSideColor(CubeSide.POSITIVE_Z, new(1, 0, 1, 1));
-            _garageRoofRight.SetSideColor(CubeSide.NEGATIVE_X, new(1, 0, 0, 1));
-
-            _garageRoofLeft.SetSideColor(CubeSide.POSITIVE_X, new(0, 1, 0, 1));
-            _garageRoofLeft.SetSideColor(CubeSide.NEGATIVE_Y, new(0, 0, 1, 1));
-            _garageRoofLeft.SetSideColor(CubeSide.POSITIVE_Y, new(1, 1, 0, 1));
-            _garageRoofLeft.SetSideColor(CubeSide.NEGATIVE_Z, new(0, 1, 1, 1));
-            _garageRoofLeft.SetSideColor(CubeSide.POSITIVE_Z, new(1, 0, 1, 1));
+           
         }
 
+        
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             GL.ClearColor(1, 1, 1, 1);
@@ -152,6 +78,7 @@ namespace T5
 
         protected override void OnLoad()
         {
+            GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light2);
             GL.Enable(EnableCap.CullFace);
@@ -165,6 +92,12 @@ namespace T5
             light.SetSpecularIntensity(new(1.0f, 1.0f, 1.0f, 1.0f));
             light.Apply(LightName.Light2);
 
+            _HouseMain =  new House();
+
+
+            
+            _Garage = new Garage();
+            _Ground = new Cube(verticesGround, Texture.LoadFromFile(@"C:\Users\Данила\source\repos\T5\T5\bin\Debug\net5.0\textures\grass.png"), 5, 5);
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -226,11 +159,9 @@ namespace T5
 
             SetupCameraMatrix();
 
-            _garageFront.Draw();
-            _garageMain.Draw();
-            _garageRoofRight.Draw();
-            _garageBack.Draw();
-            _garageRoofLeft.Draw();
+            _HouseMain.Draw();
+            _Ground.Draw();
+            _Garage.Draw();
         }
 
         private void SetupCameraMatrix()

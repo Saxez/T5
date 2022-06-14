@@ -8,15 +8,6 @@ using OpenTK.Graphics.OpenGL;
 
 namespace T5
 {
-	/*public enum CubeSide
-	{
-		NEGATIVE_X = 0,
-		POSITIVE_X = 1,
-		NEGATIVE_Y = 2,
-		POSITIVE_Y = 3,
-		NEGATIVE_Z = 4,
-		POSITIVE_Z = 5,
-	};*/
 
 	public class Triangle
 	{
@@ -24,17 +15,23 @@ namespace T5
 		private Vector4[] _sideColors = new Vector4[6];
 		private Vector4 _specularColor = new(0, 0, 0, 1);
 		private float _shininess = 1f;
-
+		private Texture _texture;
 		private float[,] _vertices;
+		private float _scaleVert;
+		private float _scaleHor;
+
 
 		private static int[,] _faces = new int[2, 3]
 		{
-			{ 0, 1, 2 },
+			{  1, 2, 0 },
 			{ 2, 1, 0}
 		};
 
-		public Triangle( float[,] vertices, float size = 1)
+		public Triangle( float[,] vertices, Texture texture, float vert, float hor, float size = 1)
 		{
+			_scaleVert = vert;
+			_scaleHor = hor;
+			_texture = texture;
 			_size = size;
 			_vertices = vertices;
 			Vector4 defaultColor = (Vector4)Color4.White;
@@ -59,6 +56,7 @@ namespace T5
 			List<float> colorPointer = new();
 			List<float> vertexPointer = new();
 			List<float> normalArray = new();
+			List<float> texCoord = new();
 
 			for (int face = 0; face < faceCount; ++face)
 			{
@@ -81,7 +79,6 @@ namespace T5
 				normalArray.Add(normal.X); normalArray.Add(normal.Y); normalArray.Add(normal.Y);
 				normalArray.Add(normal.X); normalArray.Add(normal.Y); normalArray.Add(normal.Y);
 				normalArray.Add(normal.X); normalArray.Add(normal.Y); normalArray.Add(normal.Y);
-				//normalArray.Add(normal.X); normalArray.Add(normal.Y); normalArray.Add(normal.Y);
 
 				vertexPointer.Add(p0.X); vertexPointer.Add(p0.Y); vertexPointer.Add(p0.Z);
 				AddColor(colorPointer, _sideColors[face]);
@@ -89,22 +86,26 @@ namespace T5
 				AddColor(colorPointer, _sideColors[face]);
 				vertexPointer.Add(p2.X); vertexPointer.Add(p2.Y); vertexPointer.Add(p2.Z);
 				AddColor(colorPointer, _sideColors[face]);
-				//vertexPointer.Add(p3.X); vertexPointer.Add(p3.Y); vertexPointer.Add(p3.Z);
-				//AddColor(colorPointer, _sideColors[face]);
+				texCoord.Add(0.0f); texCoord.Add(0.0f);
+				texCoord.Add(0.5f * _scaleHor * _scaleHor); texCoord.Add(1f* _scaleVert);
+				texCoord.Add(1f * _scaleHor * _scaleHor); texCoord.Add(0.0f);
 			}
-
+			_texture.Use(TextureUnit.Texture0);
+			GL.EnableClientState(ArrayCap.TextureCoordArray);
+			GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, texCoord.ToArray());
 			GL.EnableClientState(ArrayCap.VertexArray);
 			GL.VertexPointer(3, VertexPointerType.Float, 0, vertexPointer.ToArray());
-			GL.EnableClientState(ArrayCap.ColorArray);
-			GL.ColorPointer(4, ColorPointerType.Float, 0, colorPointer.ToArray());
+			//GL.EnableClientState(ArrayCap.ColorArray);
+			//GL.ColorPointer(4, ColorPointerType.Float, 0, colorPointer.ToArray());
 			GL.EnableClientState(ArrayCap.NormalArray);
 			GL.NormalPointer(NormalPointerType.Float, 0, normalArray.ToArray());
-			{
-				GL.DrawArrays(PrimitiveType.Triangles, 0, vertexPointer.Count / 3);
-			}
-			GL.DisableClientState(ArrayCap.ColorArray);
+
+			GL.DrawArrays(PrimitiveType.Triangles, 0, vertexPointer.Count / 3);
+
+			//GL.DisableClientState(ArrayCap.ColorArray);
 			GL.DisableClientState(ArrayCap.VertexArray);
 			GL.DisableClientState(ArrayCap.NormalArray);
+			GL.DisableClientState(ArrayCap.TextureCoordArray);
 		}
 
 		public void SetSideColor(CubeSide side, Vector4 color)

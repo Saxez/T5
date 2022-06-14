@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "mIGIXRW/NIDmZbQlhKluv6PUTtJJpBlFy7PHP/3u9wQshwoGnX3x6KdEJLR3PPuqwn+aF/FWWMtBJCmuU6BYYQ==",
+  "dgSpecHash": "XRmtVUe8sY+XB0mu21vmDaK5ZjuFU38zLA5CLZALBvHTrnnYw5Q9OwxL9vb6crwmIr2aVdQC7AfRXFAD+7JwQQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Данила\\source\\repos\\T5\\T5\\T5.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Данила\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\Данила\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\opentk\\4.7.2\\opentk.4.7.2.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\opentk.compute\\4.7.2\\opentk.compute.4.7.2.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\opentk.core\\4.7.2\\opentk.core.4.7.2.nupkg.sha512",
@@ -15,7 +17,10 @@
     "C:\\Users\\Данила\\.nuget\\packages\\opentk.windowing.common\\4.7.2\\opentk.windowing.common.4.7.2.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\opentk.windowing.desktop\\4.7.2\\opentk.windowing.desktop.4.7.2.nupkg.sha512",
     "C:\\Users\\Данила\\.nuget\\packages\\opentk.windowing.graphicslibraryframework\\4.7.2\\opentk.windowing.graphicslibraryframework.4.7.2.nupkg.sha512",
-    "C:\\Users\\Данила\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"
+    "C:\\Users\\Данила\\.nuget\\packages\\sixlabors.imagesharp\\2.1.2\\sixlabors.imagesharp.2.1.2.nupkg.sha512",
+    "C:\\Users\\Данила\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\Данила\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+    "C:\\Users\\Данила\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }
